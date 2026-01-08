@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Voting PEMILIHAN OSIS SMK AZ-ZAHRO</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg: #f8fafc;
+            --text: #1e293b;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; }
+        .container { max-width: 900px; margin: 2rem auto; padding: 1.5rem; }
+        .card-box { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        
+        /* Input Styles */
+        input[readonly] { background-color: #f1f5f9; color: #64748b; cursor: not-allowed; }
+        .input-group { margin-bottom: 1.2rem; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+        .input-group input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
+        
+        /* Button Styles */
+        .btn { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold; transition: 0.3s; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-vote { background: #059669; margin-top: 10px; }
+        .btn-vote:hover { background: #047857; }
+
+        /* Paslon Grid */
+        .grid-paslon { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 2rem; }
+        .card-paslon { border: 2px solid #e2e8f0; border-radius: 12px; overflow: hidden; width: 280px; text-align: center; background: white; transition: 0.3s; }
+        .card-paslon:hover { border-color: var(--primary); transform: translateY(-5px); }
+        .card-paslon img { width: 100%; height: 250px; object-fit: cover; }
+        .card-content { padding: 1.5rem; }
+
+        /* Helpers */
+        .hidden { display: none; }
+        .error { color: #dc2626; font-size: 0.9rem; margin-top: 5px; font-weight: bold; }
+        #timer { font-weight: bold; color: var(--primary); font-size: 1.5rem; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="login-page" class="card-box">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 2rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 1.5rem;">
+            <img src="https://github.com/azzahrolocare/pemilu-osis-smk-azzahro/raw/main/logo-smk-azzahro.png" alt="Logo SMK" style="width: 80px; height: auto;">
+            
+            <div style="text-align: left;">
+                <h2 style="margin:0; font-size: 1.2rem; color: var(--text);">E-Voting OSIS</h2>
+                <h2 style="margin:0; font-size: 1.5rem; color: var(--primary); line-height: 1.2;">SMK AZ-ZAHRO</h2>
+                <p style="color: #64748b; margin: 5px 0 0 0; font-weight: 500;">Masa Bakti 2026/2027</p>
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <label>Kode Unik DPT Siswa</label>
+            <input type="text" id="dpt-field" placeholder="Masukkan 10 digit Kode Unik DPT" oninput="cekDPT()" maxlength="10">
+            <p id="error-msg" class="error hidden"></p>
+        </div>
+
+        <div class="input-group">
+            <label>Nama Siswa</label>
+            <input type="text" id="auto-nama" placeholder=" " readonly>
+        </div>
+
+        <div class="input-group">
+            <label>Kelas</label>
+            <input type="text" id="auto-kelas" placeholder=" " readonly>
+        </div>
+        
+        <button class="btn" id="btn-masuk" onclick="prosesLogin()" disabled>Masuk ke Bilik Suara</button>
+    </div>
+
+    <div id="vote-page" class="hidden">
+        <div class="card-box" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h3 id="display-nama" style="margin:0">Nama Siswa</h3>
+                <p id="display-kelas" style="color: #64748b; margin:0">Kelas</p>
+            </div>
+            <div style="text-align: right; color: var(--primary); font-weight: bold;">SURAT SUARA DIGITAL</div>
+        </div>
+
+        <h2 style="text-align: center;">Tentukan Pilihan Anda</h2>
+        
+        <div class="grid-paslon">
+            <div class="card-paslon">
+                <img src="https://github.com/azzahrolocare/pemilu-osis-smk-azzahro/raw/main/paslon1-osis-smk-2026-2027.jpg" alt="Paslon 01">
+                <div class="card-content">
+                    <small>NOMOR URUT</small>
+                    <h1 style="margin:0">01</h1>
+                    <h3 style="margin: 10px 0;">Putri Ayu Lestari</h3>
+                    <button class="btn btn-vote" onclick="konfirmasiPilihan('Paslon 01')">Pilih Nomor 01</button>
+                </div>
+            </div>
+
+            <div class="card-paslon">
+                <img src="https://github.com/azzahrolocare/pemilu-osis-smk-azzahro/raw/main/paslon2-osis-smk-2026-2027.jpg" alt="Paslon 02">
+                <div class="card-content">
+                    <small>NOMOR URUT</small>
+                    <h1 style="margin:0">02</h1>
+                    <h3 style="margin: 10px 0;">Rizki Hidayat</h3>
+                    <button class="btn btn-vote" onclick="konfirmasiPilihan('Paslon 02')">Pilih Nomor 02</button>
+                </div>
+            </div>
+            
+            <div class="card-paslon">
+                <img src="https://github.com/azzahrolocare/pemilu-osis-smk-azzahro/raw/main/paslon3-osis-smk-2026-2027.jpg" alt="Paslon 03">
+                <div class="card-content">
+                    <small>NOMOR URUT</small>
+                    <h1 style="margin:0">03</h1>
+                    <h3 style="margin: 10px 0;">Lilis Cintya Ningsih</h3>
+                    <button class="btn btn-vote" onclick="konfirmasiPilihan('Paslon 03')">Pilih Nomor 03</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="thanks-page" class="hidden" style="text-align: center;">
+        <div class="card-box">
+            <h1 style="font-size: 4rem; margin: 0;">✅</h1>
+            <h2 style="color: #059669;">Suara Anda Berhasil Dikirim!</h2>
+            <p style="font-size: 1.2rem; line-height: 1.6;">
+                Terima kasih <strong id="msg-nama">NAMA</strong> (<strong id="msg-kelas">KELAS</strong>) <br>
+                telah menggunakan hak pilih Anda dalam Pemilihan OSIS 2026/2027.
+            </p>
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 2rem 0;">
+            <p style="color: #64748b;">Sistem akan otomatis kembali ke Login dalam:</p>
+            <div id="timer">10</div>
+            <p style="color: #94a3b8; font-size: 0.8rem; margin-top: 1rem;">KODE: SUKSES_VOTE_2026</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // DATA MASTER SISWA
+    const daftarSiswa = [
+      { "nama": "Adi Putra", "kode_unik_dpt": "8293041526", "kelas": "Kelas 10" },
+      { "nama": "Halimatus Zahro", "kode_unik_dpt": "1049283751", "kelas": "Kelas 10" },
+      { "nama": "Muhammad Sahlan Romli", "kode_unik_dpt": "5738291046", "kelas": "Kelas 10" },
+      { "nama": "Muhammad Septian Ramadani", "kode_unik_dpt": "2948571032", "kelas": "Kelas 10" },
+      { "nama": "Muhammad Zainol", "kode_unik_dpt": "6610293847", "kelas": "Kelas 10" },
+      { "nama": "Muhammad Zakki", "kode_unik_dpt": "4039281756", "kelas": "Kelas 10" },
+      { "nama": "Putri Ayu Lestari", "kode_unik_dpt": "9182736450", "kelas": "Kelas 10" },
+      { "nama": "Umam", "kode_unik_dpt": "3384756102", "kelas": "Kelas 10" },
+      { "nama": "Zekki Abdullah", "kode_unik_dpt": "7564839201", "kelas": "Kelas 10" },
+      { "nama": "Ahmad Zaini", "kode_unik_dpt": "1293847560", "kelas": "Kelas 11" },
+      { "nama": "Andri", "kode_unik_dpt": "5546372819", "kelas": "Kelas 11" },
+      { "nama": "Eka Aprilia Purwanti", "kode_unik_dpt": "8829304172", "kelas": "Kelas 11" },
+      { "nama": "Lilis Cintya Ningsih", "kode_unik_dpt": "2039485761", "kelas": "Kelas 11" },
+      { "nama": "Malik Maulana", "kode_unik_dpt": "4756102938", "kelas": "Kelas 11" },
+      { "nama": "Masrulla Adi Saputra", "kode_unik_dpt": "6102938475", "kelas": "Kelas 11" },
+      { "nama": "Muhammad Fadil", "kode_unik_dpt": "3948576102", "kelas": "Kelas 11" },
+      { "nama": "Muhammad Sofyanzah", "kode_unik_dpt": "8273645109", "kelas": "Kelas 11" },
+      { "nama": "Muhammad Suryadi", "kode_unik_dpt": "5019283746", "kelas": "Kelas 11" },
+      { "nama": "Nila Zulfa Khadijah", "kode_unik_dpt": "7728394051", "kelas": "Kelas 11" },
+      { "nama": "Oktavia Indriyanti", "kode_unik_dpt": "1102938475", "kelas": "Kelas 11" },
+      { "nama": "Rafiki Hasani", "kode_unik_dpt": "9485761023", "kelas": "Kelas 11" },
+      { "nama": "Rizki Hidayat", "kode_unik_dpt": "2837465019", "kelas": "Kelas 11" },
+      { "nama": "Saiful Anwariki", "kode_unik_dpt": "6451092837", "kelas": "Kelas 11" },
+      { "nama": "Siti Habima", "kode_unik_dpt": "3029384756", "kelas": "Kelas 11" },
+      { "nama": "Sitti Qanitatul Khoiriah", "kode_unik_dpt": "5192837460", "kelas": "Kelas 11" },
+      { "nama": "Siti Wardah", "kode_unik_dpt": "8374650192", "kelas": "Kelas 11" },
+      { "nama": "Sitti Magfirah", "kode_unik_dpt": "4958671023", "kelas": "Kelas 11" },
+      { "nama": "Hasim Huzaini", "kode_unik_dpt": "7102938465", "kelas": "Kelas 12" },
+      { "nama": "Nabila Fathiyah Rosidah", "kode_unik_dpt": "2293847561", "kelas": "Kelas 12" },
+      { "nama": "Karina", "kode_unik_dpt": "5847362910", "kelas": "Kelas 12" }
+    ];
+
+    let userAktif = null;
+
+    // 1. CEK KODE DPT SAAT MENGETIK
+    function cekDPT() {
+        const dptInput = document.getElementById('dpt-field').value;
+        const autoNama = document.getElementById('auto-nama');
+        const autoKelas = document.getElementById('auto-kelas');
+        const btnMasuk = document.getElementById('btn-masuk');
+        const errorMsg = document.getElementById('error-msg');
+        
+        const siswa = daftarSiswa.find(s => s.kode_unik_dpt === dptInput);
+
+        if (siswa) {
+            autoNama.value = siswa.nama;
+            autoKelas.value = siswa.kelas;
+            btnMasuk.disabled = false;
+            errorMsg.classList.add('hidden');
+        } else {
+            autoNama.value = "";
+            autoKelas.value = "";
+            btnMasuk.disabled = true;
+            if(dptInput.length >= 5) {
+                errorMsg.innerText = "Kode DPT tidak terdaftar dalam sistem!";
+                errorMsg.classList.remove('hidden');
+            } else {
+                errorMsg.classList.add('hidden');
+            }
+        }
+    }
+
+    // 2. PROSES LOGIN & CEK DOUBLE VOTE
+    function prosesLogin() {
+        const dptInput = document.getElementById('dpt-field').value;
+        const sudahMemilih = localStorage.getItem('voted_' + dptInput);
+
+        if (sudahMemilih) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Akses Ditolak',
+                text: 'Maaf, Kode DPT ini sudah digunakan untuk memberikan suara!',
+                confirmButtonColor: '#2563eb'
+            });
+        } else {
+            userAktif = daftarSiswa.find(s => s.kode_unik_dpt === dptInput);
+            document.getElementById('display-nama').innerText = userAktif.nama;
+            document.getElementById('display-kelas').innerText = userAktif.kelas;
+            
+            document.getElementById('login-page').classList.add('hidden');
+            document.getElementById('vote-page').classList.remove('hidden');
+        }
+    }
+
+    // 3. KONFIRMASI DENGAN SWEETALERT
+    function konfirmasiPilihan(pilihan) {
+        Swal.fire({
+            title: 'Konfirmasi Pilihan',
+            text: `Anda akan memilih ${pilihan}. Pilihan tidak dapat diubah kembali!`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#059669',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Saya Yakin!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                simpanSuara(pilihan);
+            }
+        })
+    }
+
+    // 4. SIMPAN SUARA & COUNTDOWN
+    function simpanSuara(pilihan) {
+        // Simpan tanda sudah memilih berdasarkan Kode DPT
+        localStorage.setItem('voted_' + userAktif.kode_unik_dpt, "true");
+        
+        // Simpan rekap suara
+        let rekap = JSON.parse(localStorage.getItem('rekap_suara')) || { "Paslon 01": 0, "Paslon 02": 0, "Paslon 03": 0 };
+        rekap[pilihan] += 1;
+        localStorage.setItem('rekap_suara', JSON.stringify(rekap));
+
+        // Isi data di halaman terima kasih
+        document.getElementById('msg-nama').innerText = userAktif.nama;
+        document.getElementById('msg-kelas').innerText = userAktif.kelas;
+
+        // Pindah Halaman
+        document.getElementById('vote-page').classList.add('hidden');
+        document.getElementById('thanks-page').classList.remove('hidden');
+
+        // Jalankan Timer
+        let detik = 10;
+        const timerElement = document.getElementById('timer');
+        const interval = setInterval(() => {
+            detik--;
+            timerElement.innerText = detik;
+            if (detik <= 0) {
+                clearInterval(interval);
+                location.reload();
+            }
+        }, 1000);
+    }
+</script>
+
+</body>
+</html>
