@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Rekapitulasi Suara - SMK AZ-ZAHRO</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #1e293b;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        
+        .dashboard-card { 
+            background: var(--card); 
+            padding: 2rem; 
+            border-radius: 15px; 
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); 
+            max-width: 1000px; 
+            margin: 0 auto 20px auto;
+            text-align: center;
+        }
+
+        .stat-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 20px; 
+            max-width: 1000px; 
+            margin: 0 auto; 
+        }
+
+        .stat-item { 
+            background: white; 
+            padding: 20px; 
+            border-radius: 12px; 
+            text-align: center; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .paslon-photo {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 2px solid #e2e8f0;
+        }
+
+        /* Progress Bar Styles */
+        .progress-bar { 
+            background: #e2e8f0; 
+            border-radius: 10px; 
+            height: 25px; 
+            overflow: hidden; 
+            margin: 10px 0;
+            position: relative;
+        }
+        .progress-fill { 
+            height: 100%; 
+            background: var(--primary); 
+            transition: width 1s ease-in-out; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        h3 { margin: 10px 0 5px 0; font-size: 1.8rem; color: var(--primary); }
+        .label-paslon { font-weight: 600; color: #64748b; margin-bottom: 5px; }
+        .container-visual { text-align: left; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-card">
+        <h2 style="margin:0; color: var(--primary);">REAL COUNT PANITIA</h2>
+        <h1 style="margin:5px 0;">SMK AZ-ZAHRO</h1>
+        <p>Data rekapitulasi suara berdasarkan <strong>Kode Unik DPT</strong> yang sah.</p>
+    </div>
+
+    <div class="stat-grid">
+        <div class="stat-item">
+            <img src="https://github.com/azzahrolocare/pemilu-osis-smp-azzahro/raw/main/paslon1-osis-smp-2026-2027.jpg" alt="Foto Paslon 1" class="paslon-photo">
+            <h3 id="v1">0</h3>
+            <p class="label-paslon">Paslon 01</p>
+        </div>
+
+        <div class="stat-item">
+            <img src="https://github.com/azzahrolocare/pemilu-osis-smp-azzahro/raw/main/paslon2-osis-smp-2026-2027.jpg" alt="Foto Paslon 2" class="paslon-photo">
+            <h3 id="v2">0</h3>
+            <p class="label-paslon">Paslon 02</p>
+        </div>
+
+        <div class="stat-item">
+            <img src="https://github.com/azzahrolocare/pemilu-osis-smp-azzahro/raw/main/paslon3-osis-smp-2026-2027.jpg" alt="Foto Paslon 3" class="paslon-photo">
+            <h3 id="v3">0</h3>
+            <p class="label-paslon">Paslon 03</p>
+        </div>
+
+        <div class="stat-item">
+            <div style="height: 180px; display: flex; align-items: center; justify-content: center; font-size: 4rem;">
+                📊
+            </div>
+            <h3 id="vtotal" style="color: #059669;">0</h3>
+            <p class="label-paslon">Total Suara Masuk</p>
+        </div>
+    </div>
+
+    <div class="dashboard-card" style="margin-top:2rem">
+        <h3 style="font-size: 1.2rem; color: var(--text); text-align: left;">Persentase Perolehan Suara</h3>
+        
+        <div class="container-visual">
+            <p style="margin: 5px 0;">Paslon 01 - Wulan Tria Mita Raharjo</p>
+            <div class="progress-bar">
+                <div id="bar1" class="progress-fill" style="width: 0%">0%</div>
+            </div>
+            
+            <p style="margin: 15px 0 5px 0;">Paslon 02 - Agustian Ridwanto</p>
+            <div class="progress-bar">
+                <div id="bar2" class="progress-fill" style="width: 0%; background: #ef4444">0%</div>
+            </div>
+
+            <p style="margin: 15px 0 5px 0;">Paslon 03 - Muhammad Nur Halil</p>
+            <div class="progress-bar">
+                <div id="bar3" class="progress-fill" style="width: 0%; background: #10b981">0%</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+            <button onclick="location.reload()" style="padding: 10px 20px; cursor: pointer; border-radius: 5px; border: none; background: #64748b; color: white;">Refresh Data</button>
+            <button onclick="resetData()" style="padding: 10px 20px; cursor: pointer; border-radius: 5px; border: 1px solid #ef4444; background: transparent; color: #ef4444; margin-left: 10px;">Reset Hasil (Bahaya!)</button>
+        </div>
+    </div>
+
+    <script>
+        function updateDisplay() {
+            // Ambil data dari localStorage
+            const dataSuara = JSON.parse(localStorage.getItem('rekap_suara')) || { "Paslon 01": 0, "Paslon 02": 0, "Paslon 03": 0 };
+            
+            const v1 = dataSuara["Paslon 01"] || 0;
+            const v2 = dataSuara["Paslon 02"] || 0;
+            const v3 = dataSuara["Paslon 03"] || 0;
+            const total = v1 + v2 + v3;
+
+            // Update angka nominal
+            document.getElementById('v1').innerText = v1;
+            document.getElementById('v2').innerText = v2;
+            document.getElementById('v3').innerText = v3;
+            document.getElementById('vtotal').innerText = total;
+
+            // Update bar dan persentase teks
+            if (total > 0) {
+                const p1 = ((v1 / total) * 100).toFixed(1);
+                const p2 = ((v2 / total) * 100).toFixed(1);
+                const p3 = ((v3 / total) * 100).toFixed(1);
+
+                document.getElementById('bar1').style.width = p1 + "%";
+                document.getElementById('bar1').innerText = p1 + "%";
+
+                document.getElementById('bar2').style.width = p2 + "%";
+                document.getElementById('bar2').innerText = p2 + "%";
+
+                document.getElementById('bar3').style.width = p3 + "%";
+                document.getElementById('bar3').innerText = p3 + "%";
+            }
+        }
+
+        function resetData() {
+            if (confirm("PERINGATAN! Anda akan menghapus seluruh hasil suara yang masuk. Tindakan ini tidak bisa dibatalkan. Lanjutkan?")) {
+                localStorage.removeItem('rekap_suara');
+                // Untuk benar-benar reset, kita juga harus menghapus status 'sudah memilih' per siswa
+                // Namun untuk simulasi, kita cukup reset angka rekapnya.
+                location.reload();
+            }
+        }
+
+        // Jalankan update saat halaman dibuka
+        updateDisplay();
+
+        // Opsional: Auto-refresh setiap 5 detik jika panel dibiarkan terbuka
+        setInterval(updateDisplay, 5000);
+    </script>
+</body>
+</html>
