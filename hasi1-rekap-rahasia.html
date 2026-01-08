@@ -225,16 +225,16 @@
 
     <script>
         function updateDisplay() {
-            const dataSuara = JSON.parse(localStorage.getItem('rekap_suara')) || { "Paslon 01": 0, "Paslon 02": 0, "Paslon 03": 0 };
-            
-            const v1 = dataSuara["Paslon 01"] || 0;
-            const v2 = dataSuara["Paslon 02"] || 0;
-            const v3 = dataSuara["Paslon 03"] || 0;
-            const total = v1 + v2 + v3;
-
-            document.getElementById('v1').innerText = v1;
-            document.getElementById('v2').innerText = v2;
-            document.getElementById('v3').innerText = v3;
+           const dataSuara = JSON.parse(localStorage.getItem('rekap_suara')) || { 
+        "paslonsmp 01": 0, 
+        "paslonsmp 02": 0, 
+        "paslonsmp 03": 0 
+    };
+    
+    const v1 = dataSuara["paslonsmp 01"] || 0;
+    const v2 = dataSuara["paslonsmp 02"] || 0;
+    const v3 = dataSuara["paslonsmp 03"] || 0;
+    const total = v1 + v2 + v3;
             document.getElementById('vtotal').innerText = total;
 
             if (total > 0) {
