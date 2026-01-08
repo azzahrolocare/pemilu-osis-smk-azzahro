@@ -195,10 +195,14 @@
         }
 
         function resetData() {
+            /* FUNGSI DINONAKTIFKAN UNTUK KEAMANAN
             if (confirm("PERINGATAN! Anda akan menghapus seluruh hasil suara yang masuk. Tindakan ini tidak bisa dibatalkan. Lanjutkan?")) {
                 localStorage.removeItem('rekap_suara');
                 location.reload();
             }
+            */
+            console.log("Fungsi reset ditekan, tapi sudah dinonaktifkan.");
+            alert("Fitur Reset Data telah dinonaktifkan oleh sistem demi keamanan data.");
         }
 
         updateDisplay();
