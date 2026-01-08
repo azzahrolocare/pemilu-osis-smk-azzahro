@@ -21,6 +21,20 @@
             max-width: 1000px; 
             margin: 0 auto 20px auto;
             text-align: center;
+            position: relative; /* Penting untuk posisi logo */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 120px;
+        }
+
+        .logo-header {
+            position: absolute;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 100px;
+            width: auto;
         }
 
         .stat-grid { 
@@ -48,7 +62,6 @@
             border: 2px solid #e2e8f0;
         }
 
-        /* Progress Bar Styles */
         .progress-bar { 
             background: #e2e8f0; 
             border-radius: 10px; 
@@ -72,14 +85,29 @@
         h3 { margin: 10px 0 5px 0; font-size: 1.8rem; color: var(--primary); }
         .label-paslon { font-weight: 600; color: #64748b; margin-bottom: 5px; }
         .container-visual { text-align: left; margin-top: 20px; }
+
+        /* Responsif untuk layar kecil */
+        @media (max-width: 600px) {
+            .logo-header {
+                position: static;
+                transform: none;
+                margin: 0 auto 15px auto;
+                height: 80px;
+            }
+            .dashboard-card { padding: 1.5rem; }
+        }
     </style>
 </head>
 <body>
 
     <div class="dashboard-card">
-        <h2 style="margin:0; color: var(--primary);">REAL COUNT PANITIA</h2>
-        <h1 style="margin:5px 0;">SMK AZ-ZAHRO</h1>
-        <p>Data rekapitulasi suara berdasarkan <strong>Kode Unik DPT</strong> yang sah.</p>
+        <img src="logo-smk-azzahro.png" alt="Logo SMK AZ-ZAHRO" class="logo-header">
+        
+        <div class="header-text">
+            <h2 style="margin:0; color: var(--primary);">REAL COUNT PANITIA</h2>
+            <h1 style="margin:5px 0;">SMK AZ-ZAHRO</h1>
+            <p style="margin:0;">Data rekapitulasi suara berdasarkan <strong>Kode Unik DPT</strong> yang sah.</p>
+        </div>
     </div>
 
     <div class="stat-grid">
@@ -138,7 +166,6 @@
 
     <script>
         function updateDisplay() {
-            // Ambil data dari localStorage
             const dataSuara = JSON.parse(localStorage.getItem('rekap_suara')) || { "Paslon 01": 0, "Paslon 02": 0, "Paslon 03": 0 };
             
             const v1 = dataSuara["Paslon 01"] || 0;
@@ -146,13 +173,11 @@
             const v3 = dataSuara["Paslon 03"] || 0;
             const total = v1 + v2 + v3;
 
-            // Update angka nominal
             document.getElementById('v1').innerText = v1;
             document.getElementById('v2').innerText = v2;
             document.getElementById('v3').innerText = v3;
             document.getElementById('vtotal').innerText = total;
 
-            // Update bar dan persentase teks
             if (total > 0) {
                 const p1 = ((v1 / total) * 100).toFixed(1);
                 const p2 = ((v2 / total) * 100).toFixed(1);
@@ -172,16 +197,11 @@
         function resetData() {
             if (confirm("PERINGATAN! Anda akan menghapus seluruh hasil suara yang masuk. Tindakan ini tidak bisa dibatalkan. Lanjutkan?")) {
                 localStorage.removeItem('rekap_suara');
-                // Untuk benar-benar reset, kita juga harus menghapus status 'sudah memilih' per siswa
-                // Namun untuk simulasi, kita cukup reset angka rekapnya.
                 location.reload();
             }
         }
 
-        // Jalankan update saat halaman dibuka
         updateDisplay();
-
-        // Opsional: Auto-refresh setiap 5 detik jika panel dibiarkan terbuka
         setInterval(updateDisplay, 5000);
     </script>
 </body>
